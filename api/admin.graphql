@@ -1,0 +1,37 @@
+
+
+type MotherType {
+  id: ID!
+  title: String,
+  isShow: Boolean,
+  banner: String，
+  childs: [ChildType],
+}
+
+type ChildType {
+  id: ID!
+  title: String,
+  isShow: Boolean,
+}
+
+type Pic {
+  id: ID!,
+  url: String,
+  isLong: Boolean,
+}
+
+type Query {
+  getTypeList: [MotherType]!
+  getPics(typeName: String!):  
+}
+
+type Mutation {
+  signin(username: String!, password: String!): Admin!
+  modifyAdminPassword(oldPassword: String!, newPassword: String!): Boolean!
+  addMotherType(title: String!, isShow: Boolean!, banner: String!): Boolean!
+  modifyMotherType(id: ID!, title: String!, isShow: Boolean!, banner: String!): Boolean!
+  deleteMotherType(id: ID!): Boolean!
+  addChildType(title: String!, isShow: Boolean!, motherID: Int!): Boolean!
+  modifyChildType(id: ID!,title: String!, isShow: Boolean!, motherID: Int!): Boolean!
+  deleteChildType(id: ID!): Boolean!
+}
