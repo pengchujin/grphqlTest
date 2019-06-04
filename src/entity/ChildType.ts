@@ -20,7 +20,7 @@ export class ChildType {
   @Column({default: false})
   isShow: boolean;
 
-  @ManyToOne((type) => MotherType, (motherType) => motherType.childTypes, { eager: true})
+  @ManyToOne((type) => MotherType, (motherType) => motherType.childTypes)
   motherType: MotherType;
 
   @OneToMany((type) => Pic, (pic) => pic.childType, {eager: true})

@@ -7,7 +7,6 @@ const schemaPath = path.join(
   __filename,
   '..',
   '..',
-  '..',
   'api',
   'admin.graphql'
 );

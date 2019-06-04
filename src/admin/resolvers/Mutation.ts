@@ -4,6 +4,7 @@ import * as config from '../../../config';
 import { Admin } from '../../entity/Admin';
 import { issueUserToken, ensureAdmin } from '../../authentication';
 import * as R from 'ramda';
+import { MotherType } from '../../entity/MotherType';
 
 async function authenticateAdmin(admin, password) {
   if (!admin) {
@@ -53,19 +54,68 @@ export async function modifyAdminPassword(_obj, data, { db, jwt }) {
 }
 
 export async function addMotherType(_obj, { title, isShow, banner}, { db, jwt }) {
-
+  const admin = await ensureAdmin(db, jwt);
+  const motherTypeRepository = db.getRepository(MotherType);
+  let newMotherType = {
+    title: title,
+    isShow: isShow,
+    banner: banner
+  };
+  try {
+    await motherTypeRepository.save(newMotherType);
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+  return true;
 }
 
 export async function modifyMotherType(_obj, { id, title, isShow, banner}, { db, jwt }) {
-
+  const admin = await ensureAdmin(db, jwt);
+  const motherTypeRepository = db.getRepository(MotherType);
+  let oldMotherType = await motherTypeRepository.findOne(id);
+  console.log(oldMotherType);
+  if (!oldMotherType) {
+    throw validationError({
+      errorMsg: '请求ID错误，没有此类型!',
+    });
+  }
+  let newMotherType = oldMotherType;
+  newMotherType.title = title;
+  newMotherType.isShow = isShow;
+  newMotherType.banner = banner;
+  let res = {}
+  try {
+    res = await motherTypeRepository.save(newMotherType);
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+  return res;
 }
 
 export async function deleteMotherType(_obj, { id}, { db, jwt }) {
-
+  const admin = await ensureAdmin(db, jwt);
+  console.log(admin)
+  const motherTypeRepository = db.getRepository(MotherType);
+  let oldMotherType = await motherTypeRepository.findOne(id);
+  console.log(oldMotherType);
+  if (!oldMotherType) {
+    throw validationError({
+      errorMsg: '请求ID错误，没有此类型!',
+    });
+  }
+  try {
+    await motherTypeRepository.remove(oldMotherType);
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+  return true;
 }
 
 export async function addChildType(_obj, {title, isShow, motherID}, { db, jwt }) {
-
+  const admin = await ensureAdmin(db, jwt);
 }
 
 export async function modifyChildType(_obj, { id, title, isShow, motherID}, { db, jwt }) {

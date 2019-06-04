@@ -43,7 +43,7 @@ const logger = require('./logger');
   });
 
   const port =
-    process.env.NOMAD_PORT_http || process.env.PORT || config.PORT || 3001;
+    process.env.NOMAD_PORT_http || process.env.PORT || config.ADMIN_PORT || 3001;
   const ip = process.env.NOMAD_IP_http || '0.0.0.0';
 
   app.listen({ port, ip }, () =>

@@ -18,7 +18,7 @@ export class Pic {
   @Column({nullable: true})
   url: String;
 
-  @ManyToOne((type) => ChildType, (ChildType) => ChildType.pics, {eager: true})
+  @ManyToOne((type) => ChildType, (ChildType) => ChildType.pics)
   childType: ChildType;
 
 }
