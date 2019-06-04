@@ -41,7 +41,7 @@ const upload = multer({ dest: config.IMAGEFILE });
   app.post('/upload', upload.single('file'), async (req, res) => {
     try {
       console.log(req['file']);
-      fs.rename(req['file'].path, 'uploads/' + req['file'].originalname, function(err) {
+      fs.rename(req['file'].path, config.IMAGEFILE + req['file'].originalname, function(err) {
         if (err) {
             throw err;
         }
