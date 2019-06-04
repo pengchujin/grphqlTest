@@ -1,31 +1,52 @@
+# 管理员
 type Admin {
+  # ID
   id: ID!
+  # 用户名
   username: String!
+  # jwt
   jwt: String
 }
 
+# 母菜单
 type MotherType {
+  # ID
   id: ID!
+  # 标题
   title: String,
+  # 是否显示
   isShow: Boolean,
+  # 封面图（长图
   banner: String,
+  # 子菜单
   childTypes: [ChildType],
 }
 
+# 子菜单
 type ChildType {
+  # ID
   id: ID!
+  # 标题
   title: String,
+  # 是否显示
   isShow: Boolean,
+  # 服装图片
   pics: [Pic],
 }
 
+# 图片 
 type Pic {
+  # ID
   id: ID!,
+  # 名称
   name: String,
+  # 链接
   url: String,
+  # 是否为长图
   isLong: Boolean,
 }
 
+# 母菜单所有图片
 type MotherPic {
   id: ID!
   title: String,
@@ -34,22 +55,37 @@ type MotherPic {
   pics: [Pic],
 }
 
+# 查询
 type Query {
+  # 获取菜单列表
   getTypeList: [MotherType]!
+  # 获取母菜单所有图片
   getMotherPics(motherID: ID!): MotherPic!
+  # 获取子菜单所有图片
   getChildPics(childID: ID!): ChildType!
 }
 
 type Mutation {
+  # 登录
   signin(username: String!, password: String!): Admin!
+  # 修改密码
   modifyAdminPassword(oldPassword: String!, newPassword: String!): Boolean!
+  # 添加母菜单 
   addMotherType(title: String!, isShow: Boolean!, banner: String!): Boolean!
+  # 修改母菜单
   modifyMotherType(id: ID!, title: String!, isShow: Boolean!, banner: String!): MotherType!
+  # 删除母菜单
   deleteMotherType(id: ID!): Boolean!
+  # 添加子菜单
   addChildType(title: String!, isShow: Boolean!, motherID: Int!): Boolean!
+  # 修改子菜单
   modifyChildType(id: ID!,title: String!, isShow: Boolean!, motherID: Int!): ChildType!
+  # 删除子菜单
   deleteChildType(id: ID!): Boolean!
+  # 添加图片
   addPic(childID: ID!, isLong: Boolean!, name: String!, url: String!): Boolean!
+  # 修改图片
   modifyPic(id: ID!, isLong: Boolean!, name: String!, url: String!, childID: Int): Pic!
+  # 删除图片
   deletePic(id: ID!): Boolean! 
 }
