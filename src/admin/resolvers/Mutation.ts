@@ -39,7 +39,7 @@ export async function modifyAdminPassword(_obj, data, { db, jwt }) {
     oldPassword: 'required|min:6',
     newPassword: 'required|min:6',
   });
-
+  console.log(admin);
   const valid = await authenticateAdmin(admin, data.oldPassword);
   if (!valid) {
     throw validationError({
@@ -238,12 +238,11 @@ export async function modifyPic(_obj, { id, childID, isLong, name, url }, { db, 
       errorMsg: '请求ID错误，没有此类型!',
     });
   }
-  let newPic = {
-    childType: oldChildType,
-    isLong: isLong,
-    name: name,
-    url: url
-  };
+  let newPic = oldPic;
+  newPic['childType'] = oldChildType;
+  newPic['isLong'] = isLong;
+  newPic['name'] = name;
+  newPic['url'] = url;
   try {
    res = await picRepository.save(newPic);
   } catch (err) {

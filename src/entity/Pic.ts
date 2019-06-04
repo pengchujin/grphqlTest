@@ -13,7 +13,7 @@ export class Pic {
   @PrimaryGeneratedColumn() id: number;
 
   @Column({nullable: true})
-  name: boolean;
+  name: String;
 
   @Column({default: false})
   isLong: boolean;

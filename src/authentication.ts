@@ -35,4 +35,5 @@ export async function ensureAdmin(db, jwt) {
       errorMsg: '请先登录!'
     });
   }
+  return admin;
 }

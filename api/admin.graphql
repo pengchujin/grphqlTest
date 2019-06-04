@@ -27,7 +27,7 @@ type Pic {
 
 type Query {
   getTypeList: [MotherType]!
-  getPics(typeName: String!): [Pic]
+  getPics(childID: ID!): [Pic]!
 }
 
 type Mutation {
