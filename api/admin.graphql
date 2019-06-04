@@ -16,6 +16,7 @@ type ChildType {
   id: ID!
   title: String,
   isShow: Boolean,
+  pics: [Pic],
 }
 
 type Pic {
@@ -26,14 +27,17 @@ type Pic {
 }
 
 type MotherPic {
- pics: [Pic],
- banner: String,
+  id: ID!
+  title: String,
+  isShow: Boolean,
+  banner: String,
+  pics: [Pic],
 }
 
 type Query {
   getTypeList: [MotherType]!
   getMotherPics(motherID: ID!): MotherPic!
-  getChildPics(childID: ID!): [Pic]!
+  getChildPics(childID: ID!): ChildType!
 }
 
 type Mutation {

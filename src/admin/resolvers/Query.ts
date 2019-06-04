@@ -19,6 +19,18 @@ export async function getTypeList(_obj, data, { db }) {
 export async function getChildPics(_obj, { childID }, { db }) {
   const childRespository = db.getRepository(ChildType);
   let res = await childRespository.findOne(childID);
-  console.log(res);
-  return true;
+  return res;
+}
+
+export async function getMotherPics(_obj, { motherID }, { db }) {
+  const motherRespository = db.getRepository(MotherType);
+  let res = await motherRespository.findOne(motherID);
+  let pics = [];
+  for (let i of res.childTypes) {
+    for (let x of i.pics) {
+      pics.push(x);
+    }
+  }
+  res['pics'] = pics;
+  return res;
 }
