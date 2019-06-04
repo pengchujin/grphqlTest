@@ -5,6 +5,7 @@ import { Admin } from '../../entity/Admin';
 import { issueUserToken, ensureAdmin } from '../../authentication';
 import * as R from 'ramda';
 import { MotherType } from '../../entity/MotherType';
+import { ChildType } from '../../entity/ChildType';
 
 async function authenticateAdmin(admin, password) {
   if (!admin) {
@@ -84,19 +85,20 @@ export async function modifyMotherType(_obj, { id, title, isShow, banner}, { db,
   newMotherType.title = title;
   newMotherType.isShow = isShow;
   newMotherType.banner = banner;
-  let res = {}
+  let res = {};
   try {
     res = await motherTypeRepository.save(newMotherType);
   } catch (err) {
     console.log(err);
     return false;
   }
+  // Todo 修改返回
   return res;
 }
 
 export async function deleteMotherType(_obj, { id}, { db, jwt }) {
   const admin = await ensureAdmin(db, jwt);
-  console.log(admin)
+  console.log(admin);
   const motherTypeRepository = db.getRepository(MotherType);
   let oldMotherType = await motherTypeRepository.findOne(id);
   console.log(oldMotherType);
@@ -116,9 +118,38 @@ export async function deleteMotherType(_obj, { id}, { db, jwt }) {
 
 export async function addChildType(_obj, {title, isShow, motherID}, { db, jwt }) {
   const admin = await ensureAdmin(db, jwt);
+  const motherTypeRepository = db.getRepository(MotherType);
+  const childTypeRepository = db.getRepository(ChildType);
+  let motherType = await motherTypeRepository.findOne(motherID);
+  if (!motherType) {
+    throw validationError({
+      errorMsg: '请求ID错误，没有此类型!',
+    });
+  }
+  let newChildType = {};
+  newChildType['title'] = title;
+  newChildType['isShow'] = isShow;
+  newChildType['motherType'] = motherType;
+
+  try {
+    await childTypeRepository.save(newChildType);
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+  return true;
 }
 
 export async function modifyChildType(_obj, { id, title, isShow, motherID}, { db, jwt }) {
+  const admin = await ensureAdmin(db, jwt);
+  const childTypeRepository = db.getRepository(ChildType);
+  let oldChildType = await childTypeRepository.findOne(id);
+  if (!oldChildType) {
+    throw validationError({
+      errorMsg: '请求ID错误，没有此类型!',
+    });
+  }
+  
 
 }
 
