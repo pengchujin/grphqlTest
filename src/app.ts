@@ -1,5 +1,6 @@
 import { createConnection } from 'typeorm';
 import * as express from 'express';
+import * as cors from "cors";
 import * as requestIp from 'request-ip';
 import * as process from 'process';
 import * as bodyParser from 'body-parser';
@@ -16,6 +17,7 @@ const logger = require('./logger');
   const db = await createConnection();
 
   const app = express();
+  app.use(cors());
   app.use(requestIp.mw());
   app.use(xmlparser({ ignoreAttrs: true, explicitArray: false }));
   app.use(

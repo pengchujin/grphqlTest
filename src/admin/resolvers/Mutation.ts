@@ -6,6 +6,7 @@ import { issueUserToken, ensureAdmin } from '../../authentication';
 import * as R from 'ramda';
 import { MotherType } from '../../entity/MotherType';
 import { ChildType } from '../../entity/ChildType';
+import { Pic } from '../../entity/Pic';
 
 async function authenticateAdmin(admin, password) {
   if (!admin) {
@@ -142,6 +143,8 @@ export async function addChildType(_obj, {title, isShow, motherID}, { db, jwt })
 
 export async function modifyChildType(_obj, { id, title, isShow, motherID}, { db, jwt }) {
   const admin = await ensureAdmin(db, jwt);
+  let res = {};
+  const motherTypeRepository = db.getRepository(MotherType);
   const childTypeRepository = db.getRepository(ChildType);
   let oldChildType = await childTypeRepository.findOne(id);
   if (!oldChildType) {
@@ -149,10 +152,121 @@ export async function modifyChildType(_obj, { id, title, isShow, motherID}, { db
       errorMsg: '请求ID错误，没有此类型!',
     });
   }
-  
-
+  console.log(oldChildType);
+  let newChildType = oldChildType;
+  let motherType = await motherTypeRepository.findOne(motherID);
+  if (!motherType) {
+    throw validationError({
+      errorMsg: '请求ID错误，没有此类型!',
+    });
+  }
+  newChildType['title'] = title;
+  newChildType['isShow'] = isShow;
+  newChildType['motherType'] = motherType;
+  try {
+   res = await childTypeRepository.save(newChildType);
+  } catch (err) {
+    throw validationError({
+      errorMsg: `${err}`,
+    });
+  }
+  return res;
 }
 
 export async function deleteChildType(_obj, { id }, { db, jwt }) {
+  const admin = await ensureAdmin(db, jwt);
+  console.log(admin);
+  const childTypeRepository = db.getRepository(ChildType);
+  let oldChildType = await childTypeRepository.findOne(id);
+  console.log(oldChildType);
+  if (!oldChildType) {
+    throw validationError({
+      errorMsg: '请求ID错误，没有此类型!',
+    });
+  }
+  try {
+    await childTypeRepository.remove(oldChildType);
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+  return true;
+}
 
+export async function addPic(_obj, { childID, isLong, name, url }, { db, jwt }) {
+  const admin = await ensureAdmin(db, jwt);
+  const picRepository = db.getRepository(Pic);
+  const childTypeRepository = db.getRepository(ChildType);
+  let oldChildType = await childTypeRepository.findOne(childID);
+  console.log(oldChildType);
+  if (!oldChildType) {
+    throw validationError({
+      errorMsg: '请求ID错误，没有此类型!',
+    });
+  }
+  let newPic = {
+    childType: oldChildType,
+    isLong: isLong,
+    name: name,
+    url: url
+  };
+
+  try {
+    await picRepository.save(newPic);
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+  return true;
+}
+
+export async function modifyPic(_obj, { id, childID, isLong, name, url }, { db, jwt }) {
+  const admin = await ensureAdmin(db, jwt);
+  let res = {};
+  const picRepository = db.getRepository(Pic);
+  const childTypeRepository = db.getRepository(ChildType);
+  let oldChildType = await childTypeRepository.findOne(childID);
+  console.log(oldChildType);
+  if (!oldChildType) {
+    throw validationError({
+      errorMsg: '请求ID错误，没有此类型!',
+    });
+  }
+  let oldPic = await picRepository.findOne(id);
+  if (!oldPic) {
+    throw validationError({
+      errorMsg: '请求ID错误，没有此类型!',
+    });
+  }
+  let newPic = {
+    childType: oldChildType,
+    isLong: isLong,
+    name: name,
+    url: url
+  };
+  try {
+   res = await picRepository.save(newPic);
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+  return res;
+}
+
+export async function deletePic(_obj, { id }, { db, jwt }) {
+  const admin = await ensureAdmin(db, jwt);
+  const picRepository = db.getRepository(Pic);
+  let oldPic = await picRepository.findOne(id);
+  if (!oldPic) {
+    throw validationError({
+      errorMsg: '请求ID错误，没有此类型!',
+    });
+  }
+  try {
+     await picRepository.remove(oldPic);
+   } catch (err) {
+     console.log(err);
+     return false;
+   }
+  return true;
 }

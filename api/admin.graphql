@@ -9,7 +9,7 @@ type MotherType {
   title: String,
   isShow: Boolean,
   banner: String,
-  childs: [ChildType],
+  childTypes: [ChildType],
 }
 
 type ChildType {
@@ -20,6 +20,7 @@ type ChildType {
 
 type Pic {
   id: ID!,
+  name: String,
   url: String,
   isLong: Boolean,
 }
@@ -33,9 +34,12 @@ type Mutation {
   signin(username: String!, password: String!): Admin!
   modifyAdminPassword(oldPassword: String!, newPassword: String!): Boolean!
   addMotherType(title: String!, isShow: Boolean!, banner: String!): Boolean!
-  modifyMotherType(id: ID!, title: String!, isShow: Boolean!, banner: String!): Boolean!
+  modifyMotherType(id: ID!, title: String!, isShow: Boolean!, banner: String!): MotherType!
   deleteMotherType(id: ID!): Boolean!
   addChildType(title: String!, isShow: Boolean!, motherID: Int!): Boolean!
-  modifyChildType(id: ID!,title: String!, isShow: Boolean!, motherID: Int!): Boolean!
+  modifyChildType(id: ID!,title: String!, isShow: Boolean!, motherID: Int!): ChildType!
   deleteChildType(id: ID!): Boolean!
+  addPic(childID: ID!, isLong: Boolean!, name: String!, url: String!): Boolean!
+  modifyPic(id: ID!, isLong: Boolean!, name: String!, url: String!, childID: Int): Pic!
+  deletePic(id: ID!): Boolean! 
 }

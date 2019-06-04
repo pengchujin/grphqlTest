@@ -12,6 +12,9 @@ import { ChildType } from './ChildType';
 export class Pic {
   @PrimaryGeneratedColumn() id: number;
 
+  @Column({nullable: true})
+  name: boolean;
+
   @Column({default: false})
   isLong: boolean;
 
