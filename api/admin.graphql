@@ -25,9 +25,15 @@ type Pic {
   isLong: Boolean,
 }
 
+type MotherPic {
+ pics: [Pic],
+ banner: String,
+}
+
 type Query {
   getTypeList: [MotherType]!
-  getPics(childID: ID!): [Pic]!
+  getMotherPics(motherID: ID!): MotherPic!
+  getChildPics(childID: ID!): [P]
 }
 
 type Mutation {

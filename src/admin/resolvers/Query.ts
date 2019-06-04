@@ -16,6 +16,9 @@ export async function getTypeList(_obj, data, { db }) {
   return res;
 }
 
-export async function getPics(_obj, { typeID }, { db }) {
-  
+export async function getChildPics(_obj, { childID }, { db }) {
+  const childRespository = db.getRepository(ChildType);
+  let res = await childRespository.findOne(childID);
+  console.log(res);
+  return true;
 }
