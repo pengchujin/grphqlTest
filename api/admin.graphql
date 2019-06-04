@@ -33,7 +33,7 @@ type MotherPic {
 type Query {
   getTypeList: [MotherType]!
   getMotherPics(motherID: ID!): MotherPic!
-  getChildPics(childID: ID!): [P]
+  getChildPics(childID: ID!): [Pic]!
 }
 
 type Mutation {
