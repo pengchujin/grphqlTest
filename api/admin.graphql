@@ -14,10 +14,14 @@ type MotherType {
   id: ID!
   # 标题
   title: String,
+  # 英文标题
+  enTitle: String,
   # 是否显示
   isShow: Boolean,
   # 封面图（长图
   banner: String,
+  # 英文 封面图（长图
+  enBanner: String,
   # 子菜单
   childTypes: [ChildType],
 }
@@ -28,6 +32,8 @@ type ChildType {
   id: ID!
   # 标题
   title: String,
+  # 英文标题
+  enTitle: String,
   # 是否显示
   isShow: Boolean,
   # 服装图片
@@ -44,6 +50,8 @@ type Pic {
   url: String,
   # 是否为长图
   isLong: Boolean,
+  # 所属语言
+  languageType: Int,
 }
 
 # 母菜单所有图片
@@ -55,14 +63,17 @@ type MotherPic {
   pics: [Pic],
 }
 
+# languageType
+# 添加图片 都显示 languageType = 0; 只中文 languageType = 1；只英文 languageType = 2
+
 # 查询
 type Query {
   # 获取菜单列表
   getTypeList: [MotherType]!
   # 获取母菜单所有图片
-  getMotherPics(motherID: ID!): MotherPic!
+  getMotherPics(motherID: ID!, languageType: Int!): MotherPic!
   # 获取子菜单所有图片
-  getChildPics(childID: ID!): ChildType!
+  getChildPics(childID: ID!, languageType: Int!): ChildType!
 }
 
 type Mutation {
@@ -71,21 +82,21 @@ type Mutation {
   # 修改密码
   modifyAdminPassword(oldPassword: String!, newPassword: String!): Boolean!
   # 添加母菜单 
-  addMotherType(title: String!, isShow: Boolean!, banner: String!): Boolean!
+  addMotherType(title: String, enTitle: String,  isShow: Boolean!, banner: String, enBanner: String): Boolean!
   # 修改母菜单
-  modifyMotherType(id: ID!, title: String!, isShow: Boolean!, banner: String!): MotherType!
+  modifyMotherType(id: ID!, title: String, enTitle: String,  isShow: Boolean!, banner: String, enBanner: String): MotherType!
   # 删除母菜单
   deleteMotherType(id: ID!): Boolean!
   # 添加子菜单
-  addChildType(title: String!, isShow: Boolean!, motherID: Int!): Boolean!
+  addChildType(title: String, enTitle: String, isShow: Boolean!, motherID: Int!): Boolean!
   # 修改子菜单
-  modifyChildType(id: ID!,title: String!, isShow: Boolean!, motherID: Int!): ChildType!
+  modifyChildType(id: ID!,title: String, enTitle: String, isShow: Boolean!, motherID: Int!): ChildType!
   # 删除子菜单
   deleteChildType(id: ID!): Boolean!
   # 添加图片
-  addPic(childID: ID!, isLong: Boolean!, name: String!, url: String!): Boolean!
+  addPic(childID: ID!, isLong: Boolean!, name: String!, url: String!, languageType: Int!): Boolean!
   # 修改图片
-  modifyPic(id: ID!, isLong: Boolean!, name: String!, url: String!, childID: Int): Pic!
+  modifyPic(id: ID!, isLong: Boolean!, name: String!, url: String!, languageType: Int!, childID: Int): Pic!
   # 删除图片
   deletePic(id: ID!): Boolean! 
 }

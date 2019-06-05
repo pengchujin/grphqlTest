@@ -21,6 +21,9 @@ export class Pic {
   @Column({nullable: true})
   url: String;
 
+  @Column({default: 0})
+  languageType: Number;
+
   @ManyToOne((type) => ChildType, (ChildType) => ChildType.pics)
   childType: ChildType;
 

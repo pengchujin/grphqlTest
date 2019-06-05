@@ -55,13 +55,15 @@ export async function modifyAdminPassword(_obj, data, { db, jwt }) {
   return true;
 }
 
-export async function addMotherType(_obj, { title, isShow, banner}, { db, jwt }) {
+export async function addMotherType(_obj, { title, enTitle, isShow, banner, enBanner}, { db, jwt }) {
   const admin = await ensureAdmin(db, jwt);
   const motherTypeRepository = db.getRepository(MotherType);
   let newMotherType = {
+    enTitle: enTitle,
     title: title,
     isShow: isShow,
-    banner: banner
+    banner: banner,
+    enBanner: enBanner
   };
   try {
     await motherTypeRepository.save(newMotherType);
@@ -72,7 +74,7 @@ export async function addMotherType(_obj, { title, isShow, banner}, { db, jwt })
   return true;
 }
 
-export async function modifyMotherType(_obj, { id, title, isShow, banner}, { db, jwt }) {
+export async function modifyMotherType(_obj, { id, title, enTitle, isShow, banner, enBanner}, { db, jwt }) {
   const admin = await ensureAdmin(db, jwt);
   const motherTypeRepository = db.getRepository(MotherType);
   let oldMotherType = await motherTypeRepository.findOne(id);
@@ -84,8 +86,10 @@ export async function modifyMotherType(_obj, { id, title, isShow, banner}, { db,
   }
   let newMotherType = oldMotherType;
   newMotherType.title = title;
+  newMotherType.enTitle = enTitle;
   newMotherType.isShow = isShow;
   newMotherType.banner = banner;
+  newMotherType.enBanner = enBanner;
   let res = {};
   try {
     res = await motherTypeRepository.save(newMotherType);
@@ -117,7 +121,7 @@ export async function deleteMotherType(_obj, { id}, { db, jwt }) {
   return true;
 }
 
-export async function addChildType(_obj, {title, isShow, motherID}, { db, jwt }) {
+export async function addChildType(_obj, {title, enTitle, isShow, motherID}, { db, jwt }) {
   const admin = await ensureAdmin(db, jwt);
   const motherTypeRepository = db.getRepository(MotherType);
   const childTypeRepository = db.getRepository(ChildType);
@@ -129,6 +133,7 @@ export async function addChildType(_obj, {title, isShow, motherID}, { db, jwt })
   }
   let newChildType = {};
   newChildType['title'] = title;
+  newChildType['enTitle'] = enTitle;
   newChildType['isShow'] = isShow;
   newChildType['motherType'] = motherType;
 
@@ -141,7 +146,7 @@ export async function addChildType(_obj, {title, isShow, motherID}, { db, jwt })
   return true;
 }
 
-export async function modifyChildType(_obj, { id, title, isShow, motherID}, { db, jwt }) {
+export async function modifyChildType(_obj, { id, title, enTitle, isShow, motherID}, { db, jwt }) {
   const admin = await ensureAdmin(db, jwt);
   let res = {};
   const motherTypeRepository = db.getRepository(MotherType);
@@ -161,6 +166,7 @@ export async function modifyChildType(_obj, { id, title, isShow, motherID}, { db
     });
   }
   newChildType['title'] = title;
+  newChildType['enTitle'] = enTitle;
   newChildType['isShow'] = isShow;
   newChildType['motherType'] = motherType;
   try {
@@ -193,7 +199,7 @@ export async function deleteChildType(_obj, { id }, { db, jwt }) {
   return true;
 }
 
-export async function addPic(_obj, { childID, isLong, name, url }, { db, jwt }) {
+export async function addPic(_obj, { childID, isLong, name, url, languageType }, { db, jwt }) {
   const admin = await ensureAdmin(db, jwt);
   const picRepository = db.getRepository(Pic);
   const childTypeRepository = db.getRepository(ChildType);
@@ -208,7 +214,8 @@ export async function addPic(_obj, { childID, isLong, name, url }, { db, jwt }) 
     childType: oldChildType,
     isLong: isLong,
     name: name,
-    url: url
+    url: url,
+    languageType: languageType
   };
 
   try {
@@ -220,7 +227,7 @@ export async function addPic(_obj, { childID, isLong, name, url }, { db, jwt }) 
   return true;
 }
 
-export async function modifyPic(_obj, { id, childID, isLong, name, url }, { db, jwt }) {
+export async function modifyPic(_obj, { id, childID, isLong, name, languageType, url }, { db, jwt }) {
   const admin = await ensureAdmin(db, jwt);
   let res = {};
   const picRepository = db.getRepository(Pic);
@@ -241,6 +248,7 @@ export async function modifyPic(_obj, { id, childID, isLong, name, url }, { db, 
   let newPic = oldPic;
   newPic['childType'] = oldChildType;
   newPic['isLong'] = isLong;
+  newPic['languageType'] = languageType;
   newPic['name'] = name;
   newPic['url'] = url;
   try {

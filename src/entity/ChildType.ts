@@ -13,9 +13,11 @@ import { Pic } from './Pic';
 export class ChildType {
   @PrimaryGeneratedColumn() id: number;
 
-  @Column()
-  @Index({ unique: true })
+  @Column({nullable: true})
   title: string;
+
+  @Column({nullable: true})
+  enTitle: string;
 
   @Column({default: false})
   isShow: boolean;

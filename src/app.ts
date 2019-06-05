@@ -39,9 +39,11 @@ const upload = multer({ dest: config.IMAGEFILE });
   );
 
   app.post('/upload', upload.single('file'), async (req, res) => {
+    let time = (new Date()).valueOf();
+    let name = time + '.' + req['file'].mimetype.split('/')[1];
     try {
-      console.log(req['file']);
-      fs.rename(req['file'].path, config.IMAGEFILE + req['file'].originalname, function(err) {
+      console.log(req['file'].mimetype.split('/'));
+      fs.rename(req['file'].path, name, function(err) {
         if (err) {
             throw err;
         }
@@ -52,7 +54,7 @@ const upload = multer({ dest: config.IMAGEFILE });
     }
     res.send({
       status: true,
-      file: req['file'].originalname
+      file: name
     });
 })
 

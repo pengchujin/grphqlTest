@@ -11,15 +11,20 @@ import { ChildType } from './ChildType';
 export class MotherType {
   @PrimaryGeneratedColumn() id: number;
 
-  @Column()
-  @Index({ unique: true })
+  @Column({ nullable: true })
   title: string;
+
+  @Column({nullable: true})
+  enTitle: string;
 
   @Column({default: false})
   isShow: boolean;
 
   @Column({nullable: true})
   banner: string;
+
+  @Column({nullable: true})
+  enBanner: string;
 
   @OneToMany((type) => ChildType, (childType) => childType.motherType, {eager: true})
   childTypes: ChildType[];
