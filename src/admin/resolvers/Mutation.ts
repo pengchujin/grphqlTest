@@ -4,6 +4,7 @@ import * as config from '../../../config';
 import { Admin } from '../../entity/Admin';
 import { issueUserToken, ensureAdmin } from '../../authentication';
 import * as R from 'ramda';
+import * as Bluebird from 'bluebird';
 import { MotherType } from '../../entity/MotherType';
 import { ChildType } from '../../entity/ChildType';
 import { Pic } from '../../entity/Pic';
@@ -199,11 +200,13 @@ export async function deleteChildType(_obj, { id }, { db, jwt }) {
   return true;
 }
 
-export async function addPic(_obj, { childID, isLong, name, url, languageType }, { db, jwt }) {
+export async function addPic(_obj, { pics }, { db, jwt }) {
+  // childID, isLong, name, url, languageType, motherList, childList, ifShow
   const admin = await ensureAdmin(db, jwt);
   const picRepository = db.getRepository(Pic);
   const childTypeRepository = db.getRepository(ChildType);
-  let oldChildType = await childTypeRepository.findOne(childID);
+  await Bluebird.map(pics, async (pic) => {
+    let oldChildType = await childTypeRepository.findOne(pic.childID);
   console.log(oldChildType);
   if (!oldChildType) {
     throw validationError({
@@ -212,10 +215,13 @@ export async function addPic(_obj, { childID, isLong, name, url, languageType },
   }
   let newPic = {
     childType: oldChildType,
-    isLong: isLong,
-    name: name,
-    url: url,
-    languageType: languageType
+    isLong: pic.isLong,
+    name: pic.name,
+    url: pic.url,
+    languageType: pic.languageType,
+    motherList: pic.motherList,
+    childList: pic.childList,
+    ifShow: pic.ifShow
   };
 
   try {
@@ -224,22 +230,23 @@ export async function addPic(_obj, { childID, isLong, name, url, languageType },
     console.log(err);
     return false;
   }
+  });
   return true;
 }
 
-export async function modifyPic(_obj, { id, childID, isLong, name, languageType, url }, { db, jwt }) {
+export async function modifyPic(_obj, { pics }, { db, jwt }) {
   const admin = await ensureAdmin(db, jwt);
-  let res = {};
+  let resArray = [];
   const picRepository = db.getRepository(Pic);
   const childTypeRepository = db.getRepository(ChildType);
-  let oldChildType = await childTypeRepository.findOne(childID);
-  console.log(oldChildType);
+  await Bluebird.map(pics, async (pic) => {
+  let oldChildType = await childTypeRepository.findOne(pic.childID);
   if (!oldChildType) {
     throw validationError({
       errorMsg: '请求ID错误，没有此类型!',
     });
   }
-  let oldPic = await picRepository.findOne(id);
+  let oldPic = await picRepository.findOne(pic);
   if (!oldPic) {
     throw validationError({
       errorMsg: '请求ID错误，没有此类型!',
@@ -247,17 +254,24 @@ export async function modifyPic(_obj, { id, childID, isLong, name, languageType,
   }
   let newPic = oldPic;
   newPic['childType'] = oldChildType;
-  newPic['isLong'] = isLong;
-  newPic['languageType'] = languageType;
-  newPic['name'] = name;
-  newPic['url'] = url;
+  newPic['isLong'] = pic.isLong;
+  newPic['languageType'] = pic.languageType;
+  newPic['name'] = pic.name;
+  newPic['url'] =  pic.url;
+  newPic['childList'] =  pic.childList;
+  newPic['motherList'] =  pic.motherList;
+  newPic['ifShow'] =  pic.ifShow;
   try {
-   res = await picRepository.save(newPic);
+   let res = await picRepository.save(newPic);
+   resArray.push(res);
   } catch (err) {
     console.log(err);
-    return false;
+    throw validationError({
+      errorMsg: `${err}`,
+    });
   }
-  return res;
+  });
+  return resArray;
 }
 
 export async function deletePic(_obj, { id }, { db, jwt }) {

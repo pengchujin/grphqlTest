@@ -26,12 +26,15 @@ export async function getTypeList(_obj, { id }, { db }) {
 export async function getChildPics(_obj, { childID, languageType }, { db }) {
   const childRespository = db.getRepository(ChildType);
   let res = await childRespository.findOne(childID);
-  let pics = []
+  let pics = [];
   for (let x of res.pics) {
     if (x.languageType === 0 || x.languageType === languageType) {
       pics.push(x);
      }
   }
+  pics.sort(function(a, b) {
+    return a.childList - b.childList;
+  });
   return res;
 }
 
@@ -46,6 +49,9 @@ export async function getMotherPics(_obj, { motherID, languageType }, { db }) {
      }
     }
   }
+  pics.sort(function(a, b) {
+    return a.motherList - b.motherList;
+  });
   res['pics'] = pics;
   return res;
 }

@@ -24,6 +24,15 @@ export class Pic {
   @Column({default: 0})
   languageType: Number;
 
+  @Column({default: 0})
+  motherList: Number;
+
+  @Column({default: 0})
+  childList: Number;
+
+  @Column({default: true})
+  ifShow: boolean;
+
   @ManyToOne((type) => ChildType, (ChildType) => ChildType.pics)
   childType: ChildType;
 

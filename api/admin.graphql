@@ -1,3 +1,24 @@
+input picInput {
+  # ID
+  id: ID,
+  # 所属二级菜单ID
+  childID: ID,
+  # 名称
+  name: String,
+  # 链接
+  url: String,
+  # 是否首页显示
+  ifShow: Boolean!,
+  # 首页排序 从0开始越大越靠后
+  motherList: Int,
+  # 二级排序 从0开始越大越靠后
+  childList: Int,
+  # 是否为长图
+  isLong: Boolean,
+  # 所属语言
+  languageType: Int,
+}
+
 # 管理员
 type Admin {
   # ID
@@ -48,6 +69,12 @@ type Pic {
   name: String,
   # 链接
   url: String,
+  # 是否首页显示
+  ifShow: Boolean!,
+  # 首页排序 从0开始越大越靠后
+  motherList: Int,
+  # 二级排序 从0开始越大越靠后
+  childList: Int,
   # 是否为长图
   isLong: Boolean,
   # 所属语言
@@ -94,9 +121,9 @@ type Mutation {
   # 删除子菜单
   deleteChildType(id: ID!): Boolean!
   # 添加图片
-  addPic(childID: ID!, isLong: Boolean!, name: String!, url: String!, languageType: Int!): Boolean!
+  addPic(pics: [picInput]): Boolean!
   # 修改图片
-  modifyPic(id: ID!, isLong: Boolean!, name: String!, url: String!, languageType: Int!, childID: Int): Pic!
+  modifyPic(pics: [picInput]): [Pic]
   # 删除图片
   deletePic(id: ID!): Boolean! 
 }
