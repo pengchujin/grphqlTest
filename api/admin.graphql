@@ -68,8 +68,8 @@ type MotherPic {
 
 # 查询
 type Query {
-  # 获取菜单列表
-  getTypeList: [MotherType]!
+  # 获取菜单列表 －１为查询所有
+  getTypeList(id: Int): [MotherType]!
   # 获取母菜单所有图片
   getMotherPics(motherID: ID!, languageType: Int!): MotherPic!
   # 获取子菜单所有图片

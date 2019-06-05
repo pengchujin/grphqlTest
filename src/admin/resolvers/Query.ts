@@ -8,10 +8,17 @@ import { MotherType } from '../../entity/MotherType';
 import { ChildType } from '../../entity/ChildType';
 import { Pic } from '../../entity/Pic';
 
-export async function getTypeList(_obj, data, { db }) {
-  console.log(db);
+export async function getTypeList(_obj, { id }, { db }) {
+  let res = [];
+  console.log(db, id);
   const motherTypeRepository = db.getRepository(MotherType);
-  let res = await motherTypeRepository.find();
+  if ( id === -1 ) {
+    res = await motherTypeRepository.find();
+    console.log(res);
+  } else {
+    let type = await motherTypeRepository.findOne(id);
+    res.push(type);
+  }
   console.log(res);
   return res;
 }
