@@ -43,7 +43,7 @@ const upload = multer({ dest: config.IMAGEFILE });
     let name = time + '.' + req['file'].mimetype.split('/')[1];
     try {
       console.log(req['file'].mimetype.split('/'));
-      fs.rename(req['file'].path, name, function(err) {
+      fs.rename(req['file'].path, config.IMAGEFILE + name, function(err) {
         if (err) {
             throw err;
         }
