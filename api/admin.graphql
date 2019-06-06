@@ -7,7 +7,7 @@ input picInput {
   name: String,
   # 链接
   url: String,
-  # 是否首页显示 0 都显示 1 只中文显示 2 英文也显示
+  # 是否首页显示 0 都显示 1 只中文显示 2 英文也显示 3 都不显示
   ifShow: Int,
   # 首页排序 从0开始越大越靠后
   motherList: Int,
