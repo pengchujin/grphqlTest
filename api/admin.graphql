@@ -24,6 +24,8 @@ type multiPic {
   enPics: [Pic],
   # 中文图片
   cnPics: [Pic],
+  # 所有图皮
+  allPics: [Pic]
 }
 
 # 管理员

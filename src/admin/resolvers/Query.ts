@@ -12,7 +12,7 @@ export async function getTypeList(_obj, { id }, { db }) {
   let res = [];
   console.log(db, id);
   const motherTypeRepository = db.getRepository(MotherType);
-  if ( id === -1 ) {
+  if (id === -1) {
     res = await motherTypeRepository.find();
     console.log(res);
   } else {
@@ -29,19 +29,24 @@ export async function getChildPics(_obj, { childID, languageType }, { db }) {
   let pics = {
     enPics: [],
     cnPics: [],
-  }
+    allPics: []
+  };
   for (let x of res.pics) {
+    pics.allPics.push(x)
     if (x.languageType === 0 || x.languageType === 2) {
       pics.enPics.push(x);
-     }
+    }
     if (x.languageType === 0 || x.languageType === 1) {
-    pics.cnPics.push(x);
+      pics.cnPics.push(x);
     }
   }
-  pics.enPics.sort(function(a, b) {
+  pics.enPics.sort(function (a, b) {
     return a.childList - b.childList;
   });
-  pics.cnPics.sort(function(a, b) {
+  pics.cnPics.sort(function (a, b) {
+    return a.childList - b.childList;
+  });
+  pics.allPics.sort(function (a, b) {
     return a.childList - b.childList;
   });
   res['pics'] = pics;
@@ -54,24 +59,29 @@ export async function getMotherPics(_obj, { motherID, languageType }, { db }) {
   let pics = {
     enPics: [],
     cnPics: [],
+    allPics: []
   }
   for (let i of res.childTypes) {
     let id = i.id;
     for (let x of i.pics) {
-     if (x.languageType === 0 || x.languageType === 2) {
-       x['childID'] = id;
-      pics.enPics.push(x);
-     }
-     if (x.languageType === 0 || x.languageType === 1) {
-      x['childID'] = id;
-     pics.cnPics.push(x);
-    }
+      pics.allPics.push(x);
+      if (x.languageType === 0 || x.languageType === 2) {
+        x['childID'] = id;
+        pics.enPics.push(x);
+      }
+      if (x.languageType === 0 || x.languageType === 1) {
+        x['childID'] = id;
+        pics.cnPics.push(x);
+      }
     }
   }
-  pics.cnPics.sort(function(a, b) {
+  pics.cnPics.sort(function (a, b) {
     return a.motherList - b.motherList;
   });
-  pics.enPics.sort(function(a, b) {
+  pics.enPics.sort(function (a, b) {
+    return a.motherList - b.motherList;
+  });
+  pics.allPics.sort(function (a, b) {
     return a.motherList - b.motherList;
   });
   res['pics'] = pics;
