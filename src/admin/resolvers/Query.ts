@@ -26,32 +26,52 @@ export async function getTypeList(_obj, { id }, { db }) {
 export async function getChildPics(_obj, { childID, languageType }, { db }) {
   const childRespository = db.getRepository(ChildType);
   let res = await childRespository.findOne(childID);
-  let pics = [];
-  for (let x of res.pics) {
-    if (x.languageType === 0 || x.languageType === languageType) {
-      pics.push(x);
-     }
+  let pics = {
+    enPics: [],
+    cnPics: [],
   }
-  pics.sort(function(a, b) {
+  for (let x of res.pics) {
+    if (x.languageType === 0 || x.languageType === 2) {
+      pics.enPics.push(x);
+     }
+    if (x.languageType === 0 || x.languageType === 1) {
+    pics.cnPics.push(x);
+    }
+  }
+  pics.enPics.sort(function(a, b) {
     return a.childList - b.childList;
   });
+  pics.cnPics.sort(function(a, b) {
+    return a.childList - b.childList;
+  });
+  res['pics'] = pics;
   return res;
 }
 
 export async function getMotherPics(_obj, { motherID, languageType }, { db }) {
   const motherRespository = db.getRepository(MotherType);
   let res = await motherRespository.findOne(motherID);
-  let pics = [];
+  let pics = {
+    enPics: [],
+    cnPics: [],
+  }
   for (let i of res.childTypes) {
     let id = i.id;
     for (let x of i.pics) {
-     if (x.languageType === 0 || x.languageType === languageType) {
+     if (x.languageType === 0 || x.languageType === 2) {
        x['childID'] = id;
-      pics.push(x);
+      pics.enPics.push(x);
      }
+     if (x.languageType === 0 || x.languageType === 1) {
+      x['childID'] = id;
+     pics.cnPics.push(x);
+    }
     }
   }
-  pics.sort(function(a, b) {
+  pics.cnPics.sort(function(a, b) {
+    return a.motherList - b.motherList;
+  });
+  pics.enPics.sort(function(a, b) {
     return a.motherList - b.motherList;
   });
   res['pics'] = pics;

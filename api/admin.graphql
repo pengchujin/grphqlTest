@@ -7,8 +7,8 @@ input picInput {
   name: String,
   # 链接
   url: String,
-  # 是否首页显示
-  ifShow: Boolean!,
+  # 是否首页显示 0 都显示 1 只中文显示 2 英文也显示
+  ifShow: Int,
   # 首页排序 从0开始越大越靠后
   motherList: Int,
   # 二级排序 从0开始越大越靠后
@@ -17,6 +17,13 @@ input picInput {
   isLong: Boolean,
   # 所属语言
   languageType: Int,
+}
+
+type multiPic {
+  # 英文图片
+  enPics: [Pic],
+  # 中文图片
+  cnPics: [Pic],
 }
 
 # 管理员
@@ -89,9 +96,21 @@ type MotherPic {
   title: String,
   isShow: Boolean,
   banner: String,
-  pics: [Pic],
+  pics: multiPic
 }
 
+type ChildPic {
+  # ID
+  id: ID!
+  # 标题
+  title: String,
+  # 英文标题
+  enTitle: String,
+  # 是否显示
+  isShow: Boolean,
+  # 服装图片
+  pics: multiPic
+}
 # languageType
 # 添加图片 都显示 languageType = 0; 只中文 languageType = 1；只英文 languageType = 2
 
@@ -100,9 +119,9 @@ type Query {
   # 获取菜单列表 －１为查询所有
   getTypeList(id: Int): [MotherType]!
   # 获取母菜单所有图片
-  getMotherPics(motherID: ID!, languageType: Int!): MotherPic!
+  getMotherPics(motherID: ID!): MotherPic!
   # 获取子菜单所有图片
-  getChildPics(childID: ID!, languageType: Int!): ChildType!
+  getChildPics(childID: ID!): ChildPic!
 }
 
 type Mutation {

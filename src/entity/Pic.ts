@@ -30,8 +30,8 @@ export class Pic {
   @Column({default: 0})
   childList: Number;
 
-  @Column({default: true})
-  ifShow: boolean;
+  @Column({default: 0})
+  ifShow: Number;
 
   @ManyToOne((type) => ChildType, (ChildType) => ChildType.pics)
   childType: ChildType;
