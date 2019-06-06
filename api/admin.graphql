@@ -79,7 +79,7 @@ type Pic {
   # 链接
   url: String,
   # 是否首页显示
-  ifShow: Boolean!,
+  ifShow: Int,
   # 首页排序 从0开始越大越靠后
   motherList: Int,
   # 二级排序 从0开始越大越靠后
