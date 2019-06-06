@@ -177,7 +177,7 @@ export async function modifyChildType(_obj, { id, title, enTitle, isShow, mother
       errorMsg: `${err}`,
     });
   }
-  return res;
+  return motherType;
 }
 
 export async function deleteChildType(_obj, { id }, { db, jwt }) {

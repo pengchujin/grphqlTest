@@ -117,7 +117,7 @@ type Mutation {
   # 添加子菜单
   addChildType(title: String, enTitle: String, isShow: Boolean!, motherID: Int!): Boolean!
   # 修改子菜单
-  modifyChildType(id: ID!,title: String, enTitle: String, isShow: Boolean!, motherID: Int!): ChildType!
+  modifyChildType(id: ID!,title: String, enTitle: String, isShow: Boolean!, motherID: Int!): MotherType!
   # 删除子菜单
   deleteChildType(id: ID!): Boolean!
   # 添加图片
