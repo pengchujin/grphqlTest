@@ -43,8 +43,10 @@ export async function getMotherPics(_obj, { motherID, languageType }, { db }) {
   let res = await motherRespository.findOne(motherID);
   let pics = [];
   for (let i of res.childTypes) {
+    let id = i.id;
     for (let x of i.pics) {
      if (x.languageType === 0 || x.languageType === languageType) {
+       x['childID'] = id;
       pics.push(x);
      }
     }

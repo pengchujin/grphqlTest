@@ -65,6 +65,8 @@ type ChildType {
 type Pic {
   # ID
   id: ID!,
+  # 所属二级菜单ID
+  childID: ID,
   # 名称
   name: String,
   # 链接
