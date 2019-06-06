@@ -144,7 +144,7 @@ type Mutation {
   # 删除子菜单
   deleteChildType(id: ID!): Boolean!
   # 添加图片
-  addPic(pics: [picInput]): Boolean!
+  addPic(pics: [picInput]): [Pic]
   # 修改图片
   modifyPic(pics: [picInput]): [Pic]
   # 删除图片

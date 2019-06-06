@@ -205,6 +205,7 @@ export async function addPic(_obj, { pics }, { db, jwt }) {
   const admin = await ensureAdmin(db, jwt);
   const picRepository = db.getRepository(Pic);
   const childTypeRepository = db.getRepository(ChildType);
+  let res = []
   await Bluebird.map(pics, async (pic) => {
     let oldChildType = await childTypeRepository.findOne(pic.childID);
   console.log(oldChildType);
@@ -225,13 +226,16 @@ export async function addPic(_obj, { pics }, { db, jwt }) {
   };
 
   try {
-    await picRepository.save(newPic);
+   let pic = await picRepository.save(newPic);
+   res.push(pic)
   } catch (err) {
     console.log(err);
-    return false;
+    throw validationError({
+      errorMsg: `${err}`,
+    });
   }
   });
-  return true;
+  return res;
 }
 
 export async function modifyPic(_obj, { pics }, { db, jwt }) {
