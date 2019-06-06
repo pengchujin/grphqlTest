@@ -250,7 +250,7 @@ export async function modifyPic(_obj, { pics }, { db, jwt }) {
       errorMsg: '请求ID错误，没有此类型!',
     });
   }
-  let oldPic = await picRepository.findOne(pic);
+  let oldPic = await picRepository.findOne(pic.id);
   if (!oldPic) {
     throw validationError({
       errorMsg: '请求ID错误，没有此类型!',
