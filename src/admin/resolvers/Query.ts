@@ -7,6 +7,7 @@ import * as R from 'ramda';
 import { MotherType } from '../../entity/MotherType';
 import { ChildType } from '../../entity/ChildType';
 import { Pic } from '../../entity/Pic';
+import { BrandPic } from '../../entity/BrandPic';
 
 export async function getTypeList(_obj, { id }, { db }) {
   let res = [];
@@ -32,7 +33,7 @@ export async function getChildPics(_obj, { childID, languageType }, { db }) {
     allPics: []
   };
   for (let x of res.pics) {
-    pics.allPics.push(x)
+    pics.allPics.push(x);
     if (x.languageType === 0 || x.languageType === 2) {
       pics.enPics.push(x);
     }
@@ -60,7 +61,7 @@ export async function getMotherPics(_obj, { motherID, languageType }, { db }) {
     enPics: [],
     cnPics: [],
     allPics: []
-  }
+  };
   for (let i of res.childTypes) {
     let id = i.id;
     for (let x of i.pics) {
@@ -85,5 +86,11 @@ export async function getMotherPics(_obj, { motherID, languageType }, { db }) {
     return a.motherList - b.motherList;
   });
   res['pics'] = pics;
+  return res;
+}
+
+export async function getBrandPics(_obj, {}, { db }) {
+  const brandPicRespository = db.getRepository(BrandPic);
+  let res = await brandPicRespository.find({ order: {order: 'ASC'} });
   return res;
 }

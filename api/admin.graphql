@@ -19,6 +19,26 @@ input picInput {
   languageType: Int,
 }
 
+input brandPicInput {
+  # 添加图片时不用传ID, 修改图片需要传
+  id: ID,
+  name: String,
+  url: String,
+  # 排序
+  order: Int,
+  languageType: Int
+}
+
+# 品牌型录
+type BrandPic {
+  id: ID,
+  name: String,
+  url: String,
+  # 排序
+  order: Int,
+  languageType: Int
+}
+
 type multiPic {
   # 英文图片
   enPics: [Pic],
@@ -124,6 +144,8 @@ type Query {
   getMotherPics(motherID: ID!): MotherPic!
   # 获取子菜单所有图片
   getChildPics(childID: ID!): ChildPic!
+  # 获取品牌图片
+  getBrandPics: [BrandPic]!
 }
 
 type Mutation {
@@ -148,5 +170,11 @@ type Mutation {
   # 修改图片
   modifyPic(pics: [picInput]): [Pic]
   # 删除图片
-  deletePic(id: ID!): Boolean! 
+  deletePic(id: ID!): Boolean!
+  # 添加品牌图片
+  addBrandPic(pics: [brandPicInput]): [BrandPic]
+  # 修改品牌图片
+  modifyBrandPic(pics: [brandPicInput]): [BrandPic]
+  # 删除品牌图片
+  deleteBrandPic(id: ID!): Boolean!  
 }

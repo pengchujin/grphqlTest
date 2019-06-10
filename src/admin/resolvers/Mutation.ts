@@ -8,6 +8,7 @@ import * as Bluebird from 'bluebird';
 import { MotherType } from '../../entity/MotherType';
 import { ChildType } from '../../entity/ChildType';
 import { Pic } from '../../entity/Pic';
+import { BrandPic } from '../../entity/BrandPic';
 
 async function authenticateAdmin(admin, password) {
   if (!admin) {
@@ -295,3 +296,59 @@ export async function deletePic(_obj, { id }, { db, jwt }) {
    }
   return true;
 }
+
+export async function addBrandPic(_obj, { pics }, { db, jwt }) {
+  const admin = await ensureAdmin(db, jwt);
+  const picRepository = db.getRepository(BrandPic);
+  pics = JSON.parse(JSON.stringify(pics));
+  let res = []
+  await Bluebird.map(pics, async (pic) => {
+    try {
+      let picRes = await picRepository.save(pic)
+      res.push(picRes)
+    } catch (err) {
+      throw validationError({
+        errorMsg: `${err}`,
+      });
+    }
+  })
+  return res
+}
+
+
+export async function modifyBrandPic(_obj, { pics }, { db, jwt }) {
+  const admin = await ensureAdmin(db, jwt);
+  pics = JSON.parse(JSON.stringify(pics));
+  const picRepository = db.getRepository(BrandPic);
+  let res = []
+  await Bluebird.map(pics, async (pic) => {
+    try {
+      let picRes = await picRepository.save(pic)
+      res.push(picRes)
+    } catch (err) {
+      throw validationError({
+        errorMsg: `${err}`,
+      });
+    }
+  })
+  return res
+}
+
+export async function deleteBrandPic(_obj, { id }, { db, jwt }) {
+  const admin = await ensureAdmin(db, jwt);
+  const picRepository = db.getRepository(BrandPic);
+  let oldPic = await picRepository.findOne(id);
+  if (!oldPic) {
+    throw validationError({
+      errorMsg: '请求ID错误，没有此类型!',
+    });
+  }
+  try {
+     await picRepository.remove(oldPic);
+   } catch (err) {
+     console.log(err);
+     return false;
+   }
+  return true;
+}
+
