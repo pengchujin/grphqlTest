@@ -7,8 +7,8 @@ import {
 } from 'typeorm';
 import { MotherType } from './MotherType';
 import { ChildType } from './ChildType';
-@Entity('pic')
 
+@Entity('brandPic')
 export class BrandPic {
   @PrimaryGeneratedColumn() id: number;
 
