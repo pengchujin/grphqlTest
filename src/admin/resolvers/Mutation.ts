@@ -323,7 +323,8 @@ export async function modifyBrandPic(_obj, { pics }, { db, jwt }) {
   let res = []
   await Bluebird.map(pics, async (pic) => {
     try {
-      let picRes = await picRepository.save(pic)
+      await picRepository.update(pic.id, pic);
+      let picRes = await picRepository.findOne(Number(pic.id));
       res.push(picRes)
     } catch (err) {
       throw validationError({

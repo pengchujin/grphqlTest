@@ -91,6 +91,20 @@ export async function getMotherPics(_obj, { motherID, languageType }, { db }) {
 
 export async function getBrandPics(_obj, {}, { db }) {
   const brandPicRespository = db.getRepository(BrandPic);
-  let res = await brandPicRespository.find({ order: {order: 'ASC'} });
-  return res;
+  let  resPics = await brandPicRespository.find({ order: {order: 'ASC'} });
+  let pics = {
+    enPics: [],
+    cnPics: [],
+    allPics: []
+  };
+  for (let x of resPics) {
+    pics.allPics.push(x);
+    if (x.languageType === 0 || x.languageType === 2) {
+      pics.enPics.push(x);
+    }
+    if (x.languageType === 0 || x.languageType === 1) {
+      pics.cnPics.push(x);
+    }
+  }
+  return pics;
 }

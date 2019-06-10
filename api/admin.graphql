@@ -48,6 +48,15 @@ type multiPic {
   allPics: [Pic]
 }
 
+type multiBrandPic {
+  # 英文图片
+  enPics: [BrandPic],
+  # 中文图片
+  cnPics: [BrandPic],
+  # 所有图皮
+  allPics: [BrandPic]
+}
+
 # 管理员
 type Admin {
   # ID
@@ -145,7 +154,7 @@ type Query {
   # 获取子菜单所有图片
   getChildPics(childID: ID!): ChildPic!
   # 获取品牌图片
-  getBrandPics: [BrandPic]!
+  getBrandPics: multiBrandPic!
 }
 
 type Mutation {
