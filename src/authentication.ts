@@ -2,6 +2,7 @@ import { sign, verify } from 'jsonwebtoken';
 import * as config from '../config';
 import { validationError } from './errors';
 import { Admin } from './entity/Admin';
+import { Vip } from './entity/vip';
 
 export function issueUserToken(user) {
   return sign({ id: user.id }, config.JWT_SECRET, { expiresIn: '30d' });
@@ -36,4 +37,23 @@ export async function ensureAdmin(db, jwt) {
     });
   }
   return admin;
+}
+
+export async function fetchVip(db, jwt) {
+  const jwtObject = extractJwt(jwt);
+  if (!(jwtObject && typeof jwtObject === 'object' && jwtObject.id)) {
+    return null;
+  }
+  const repository = db.getRepository(Vip);
+  return await repository.findOne({ id: jwtObject.id });
+}
+
+export async function ensureVip(db, jwt) {
+  const vip = await fetchVip(db, jwt);
+  if (!vip) {
+    throw validationError({
+      errorMsg: '请先登录!'
+    });
+  }
+  return vip;
 }

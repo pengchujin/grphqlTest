@@ -2,7 +2,7 @@ import * as bcrypt from 'bcrypt';
 import { validate, validationError } from '../../errors';
 import * as config from '../../../config';
 import { Admin } from '../../entity/Admin';
-import { issueUserToken, ensureAdmin } from '../../authentication';
+import { issueUserToken, ensureAdmin, ensureVip } from '../../authentication';
 import * as R from 'ramda';
 import * as Bluebird from 'bluebird';
 import { MotherType } from '../../entity/MotherType';
@@ -16,6 +16,13 @@ async function authenticateAdmin(admin, password) {
     return false;
   }
   return await bcrypt.compare(password, admin.encryptedPassword);
+}
+
+async function authenticateVip(vip, password) {
+  if (!vip) {
+    return false;
+  }
+  return await bcrypt.compare(password, vip.encryptedPassword);
 }
 
 export async function signin(_obj, { username, password }, { db }) {
@@ -85,29 +92,26 @@ export async function modifyAdminPassword(_obj, data, { db, jwt }) {
   return true;
 }
 
-// export async function modifyVipPassword(_obj, data, { db, jwt }) {
-//   const admin = await ensureAdmin(db, jwt);
-//   const repository = db.getRepository(Admin);
-
-//   data = validate(data, {
-//     oldPassword: 'required|min:6',
-//     newPassword: 'required|min:6',
-//   });
-//   console.log(admin);
-//   const valid = await authenticateAdmin(admin, data.oldPassword);
-//   if (!valid) {
-//     throw validationError({
-//       errorMsg: '当前密码错误!',
-//     });
-//   }
-// // Todo admin.encryptedPassword 报错
-//   admin['encryptedPassword'] = await bcrypt.hash(
-//     data.newPassword,
-//     Number(config.SALT_ROUNDS)
-//   );
-//   await repository.save(admin);
-//   return true;
-// }
+export async function modifyVipPassword(_obj, data, { db, jwt }) {
+  const vip = await ensureVip(db, jwt);
+  const repository = db.getRepository(Vip);
+  data = validate(data, {
+    oldPassword: 'required|min:6',
+    newPassword: 'required|min:6',
+  });
+  const valid = await authenticateVip(vip, data.oldPassword);
+  if (!valid) {
+    throw validationError({
+      errorMsg: '当前密码错误!',
+    });
+  }
+  vip['encryptedPassword'] = await bcrypt.hash(
+    data.newPassword,
+    Number(config.SALT_ROUNDS)
+  );
+  await repository.save(vip);
+  return true;
+}
 
 export async function addMotherType(_obj, { title, enTitle, isShow, banner, enBanner}, { db, jwt }) {
   const admin = await ensureAdmin(db, jwt);

@@ -2,6 +2,7 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
+  Generated,
   Index
 } from 'typeorm';
 

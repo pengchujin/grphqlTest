@@ -174,8 +174,8 @@ type Mutation {
   vipSignin(username: String!, password: String!): Vip!
   # 添加 Vip 用户
   addVip(username: String!, password: String!): Boolean!
-  # # 修改 Vip 密码
-  # modifyVipPassword(oldPassword: String!, newPassword: String!): Boolean!
+  # 修改 Vip 密码
+  modifyVipPassword(oldPassword: String!, newPassword: String!): Boolean!
   # 修改密码
   modifyAdminPassword(oldPassword: String!, newPassword: String!): Boolean!
   # 添加母菜单 
