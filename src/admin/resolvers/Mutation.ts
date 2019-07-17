@@ -9,6 +9,7 @@ import { MotherType } from '../../entity/MotherType';
 import { ChildType } from '../../entity/ChildType';
 import { Pic } from '../../entity/Pic';
 import { BrandPic } from '../../entity/BrandPic';
+import { Vip } from '../../entity/vip';
 
 async function authenticateAdmin(admin, password) {
   if (!admin) {
@@ -31,6 +32,33 @@ export async function signin(_obj, { username, password }, { db }) {
     R.merge({ jwt: token, privilegesStr: JSON.stringify(admin.privileges) }),
     R.pick(['id', 'username'])
   )(admin);
+}
+
+export async function vipSignin(_obj, { username, password }, { db }) {
+  const repository = db.getRepository(Vip);
+  const vip = await repository.findOne({ username });
+  const valid = await authenticateAdmin(vip, password);
+  if (!valid) {
+    throw validationError({
+      errorMsg: '用户名不存在或密码错误!',
+    });
+  }
+  const token = issueUserToken(vip);
+  return R.compose(
+    R.merge({ jwt: token, privilegesStr: JSON.stringify(vip.privileges) }),
+    R.pick(['id', 'username'])
+  )(vip);
+}
+
+export async function addVip(_obj, { username, password }, { db }) {
+  const repository = db.getRepository(Vip);
+  const encryptedPassword = await bcrypt.hash(password, Number(config.SALT_ROUNDS));
+  const admin = repository.create({
+    username,
+    encryptedPassword
+  });
+  await repository.save(admin);
+  return true;
 }
 
 export async function modifyAdminPassword(_obj, data, { db, jwt }) {
@@ -56,6 +84,30 @@ export async function modifyAdminPassword(_obj, data, { db, jwt }) {
   await repository.save(admin);
   return true;
 }
+
+// export async function modifyVipPassword(_obj, data, { db, jwt }) {
+//   const admin = await ensureAdmin(db, jwt);
+//   const repository = db.getRepository(Admin);
+
+//   data = validate(data, {
+//     oldPassword: 'required|min:6',
+//     newPassword: 'required|min:6',
+//   });
+//   console.log(admin);
+//   const valid = await authenticateAdmin(admin, data.oldPassword);
+//   if (!valid) {
+//     throw validationError({
+//       errorMsg: '当前密码错误!',
+//     });
+//   }
+// // Todo admin.encryptedPassword 报错
+//   admin['encryptedPassword'] = await bcrypt.hash(
+//     data.newPassword,
+//     Number(config.SALT_ROUNDS)
+//   );
+//   await repository.save(admin);
+//   return true;
+// }
 
 export async function addMotherType(_obj, { title, enTitle, isShow, banner, enBanner}, { db, jwt }) {
   const admin = await ensureAdmin(db, jwt);
@@ -206,7 +258,7 @@ export async function addPic(_obj, { pics }, { db, jwt }) {
   const admin = await ensureAdmin(db, jwt);
   const picRepository = db.getRepository(Pic);
   const childTypeRepository = db.getRepository(ChildType);
-  let res = []
+  let res = [];
   await Bluebird.map(pics, async (pic) => {
     let oldChildType = await childTypeRepository.findOne(pic.childID);
   console.log(oldChildType);
@@ -228,7 +280,7 @@ export async function addPic(_obj, { pics }, { db, jwt }) {
 
   try {
    let pic = await picRepository.save(newPic);
-   res.push(pic)
+   res.push(pic);
   } catch (err) {
     console.log(err);
     throw validationError({
@@ -301,38 +353,37 @@ export async function addBrandPic(_obj, { pics }, { db, jwt }) {
   const admin = await ensureAdmin(db, jwt);
   const picRepository = db.getRepository(BrandPic);
   pics = JSON.parse(JSON.stringify(pics));
-  let res = []
+  let res = [];
   await Bluebird.map(pics, async (pic) => {
     try {
-      let picRes = await picRepository.save(pic)
-      res.push(picRes)
+      let picRes = await picRepository.save(pic);
+      res.push(picRes);
     } catch (err) {
       throw validationError({
         errorMsg: `${err}`,
       });
     }
-  })
-  return res
+  });
+  return res;
 }
-
 
 export async function modifyBrandPic(_obj, { pics }, { db, jwt }) {
   const admin = await ensureAdmin(db, jwt);
   pics = JSON.parse(JSON.stringify(pics));
   const picRepository = db.getRepository(BrandPic);
-  let res = []
+  let res = [];
   await Bluebird.map(pics, async (pic) => {
     try {
       await picRepository.update(pic.id, pic);
       let picRes = await picRepository.findOne(Number(pic.id));
-      res.push(picRes)
+      res.push(picRes);
     } catch (err) {
       throw validationError({
         errorMsg: `${err}`,
       });
     }
-  })
-  return res
+  });
+  return res;
 }
 
 export async function deleteBrandPic(_obj, { id }, { db, jwt }) {
@@ -352,4 +403,3 @@ export async function deleteBrandPic(_obj, { id }, { db, jwt }) {
    }
   return true;
 }
-

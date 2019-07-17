@@ -27,4 +27,7 @@ export class ChildType {
 
   @OneToMany((type) => Pic, (pic) => pic.childType, {eager: true})
   pics: Pic[];
+
+  @Column({nullable: true, default: 0})
+  sort: number;
 }

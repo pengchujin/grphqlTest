@@ -14,7 +14,9 @@ export async function getTypeList(_obj, { id }, { db }) {
   const motherTypeRepository = db.getRepository(MotherType);
   if (id === -1) {
     res = await motherTypeRepository.find({ order: {id: 'ASC'} });
-    console.log(res);
+    for (let i of res) {
+      i.childTypes.sort((a, b) => a.sort - b.sort);
+    }
   } else {
     let type = await motherTypeRepository.findOne(id);
     res.push(type);

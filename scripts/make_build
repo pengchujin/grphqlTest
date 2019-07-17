@@ -1,0 +1,23 @@
+#!/bin/bash
+
+yarn install
+rm -rf lib/api
+rm -rf lib/src
+rm -rf lib/static
+rm -rf lib/node_modules
+rm lib/config.*
+rm lib/ormconfig.*
+
+yarn tsc
+
+cp -r api lib/
+cp ormconfig.json lib/ormconfig.json
+cp -r node_modules lib/
+
+datetime=$(date '+%Y%m%d%H%M%S')
+
+FILE=version.txt
+
+echo $datetime"-"$RANDOM > $FILE
+
+cp version.txt lib/

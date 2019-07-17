@@ -40,7 +40,8 @@ const upload = multer({ dest: config.IMAGEFILE });
 
   app.post('/upload', upload.single('file'), async (req, res) => {
     let time = (new Date()).valueOf();
-    let name = time + '.' + req['file'].mimetype.split('/')[1];
+    let randomString = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    let name = randomString + '-' + time + '.' + req['file'].mimetype.split('/')[1];
     try {
       console.log(req['file'].mimetype.split('/'));
       fs.rename(req['file'].path, config.IMAGEFILE + name, function(err) {
@@ -56,7 +57,7 @@ const upload = multer({ dest: config.IMAGEFILE });
       status: true,
       file: name
     });
-})
+});
 
   const path = '/graphql';
 
