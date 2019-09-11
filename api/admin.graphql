@@ -165,6 +165,8 @@ type Query {
   getChildPics(childID: ID!): ChildPic!
   # 获取品牌图片
   getBrandPics: multiBrandPic!
+  # 获取所有 Vip 用户
+  getAllUsers: [Vip]!
 }
 
 type Mutation {

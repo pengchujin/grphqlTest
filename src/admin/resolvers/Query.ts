@@ -8,6 +8,7 @@ import { MotherType } from '../../entity/MotherType';
 import { ChildType } from '../../entity/ChildType';
 import { Pic } from '../../entity/Pic';
 import { BrandPic } from '../../entity/BrandPic';
+import { Vip } from '../../entity/vip';
 
 export async function getTypeList(_obj, { id }, { db }) {
   let res = [];
@@ -107,4 +108,10 @@ export async function getBrandPics(_obj, {}, { db }) {
     }
   }
   return pics;
+}
+
+export async function getAllUsers(_obj, {}, { db }) {
+  const vipRespository = db.getRepository(Vip);
+  const users = await vipRespository.find({order: {id: 'ASC'}});
+  return users;
 }
