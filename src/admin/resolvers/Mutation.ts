@@ -57,7 +57,8 @@ export async function vipSignin(_obj, { username, password }, { db }) {
   )(vip);
 }
 
-export async function addVip(_obj, { username, password }, { db }) {
+export async function addVip(_obj, { username, password }, { db, jwt }) {
+  const adminLogin = await ensureAdmin(db, jwt);
   const repository = db.getRepository(Vip);
   const encryptedPassword = await bcrypt.hash(password, Number(config.SALT_ROUNDS));
   const admin = repository.create({
@@ -68,7 +69,7 @@ export async function addVip(_obj, { username, password }, { db }) {
   return true;
 }
 
-export async function modifyAdminPassword(_obj, data, { db, jwt }) {
+export async function modifyAdminPassword(_obj, {data}, { db, jwt }) {
   const admin = await ensureAdmin(db, jwt);
   const repository = db.getRepository(Admin);
 
@@ -92,21 +93,12 @@ export async function modifyAdminPassword(_obj, data, { db, jwt }) {
   return true;
 }
 
-export async function modifyVipPassword(_obj, data, { db, jwt }) {
-  const vip = await ensureVip(db, jwt);
+export async function modifyVipPassword(_obj, {vipId, newPassword}, { db, jwt }) {
+  const admin = await ensureAdmin(db, jwt);
   const repository = db.getRepository(Vip);
-  data = validate(data, {
-    oldPassword: 'required|min:6',
-    newPassword: 'required|min:6',
-  });
-  const valid = await authenticateVip(vip, data.oldPassword);
-  if (!valid) {
-    throw validationError({
-      errorMsg: '当前密码错误!',
-    });
-  }
+  const vip = await repository.findOne(vipId);
   vip['encryptedPassword'] = await bcrypt.hash(
-    data.newPassword,
+    newPassword,
     Number(config.SALT_ROUNDS)
   );
   await repository.save(vip);
