@@ -25,15 +25,11 @@ input collectionInput {
   id: ID,
   name: String,
   # scene
-  itemId: Int,
-  categoryId: Int,
-  productIndex: Int,
-  tragetProductIndex: Int,
-  sortIndex: Int,
-  combtIndex: Int,
-  pIndex: Int,
-  eIndex: Int,
-  targetFIndex: Int,
+  productId: Int,
+  tagId: Int,
+  uuid: String,
+  elementIds: [Int],
+  combinationId: Int,
 }
 
 input brandPicInput {
@@ -51,15 +47,11 @@ type Collection {
   id: ID,
   name: String,
   # scene
-  itemId: Int,
-  categoryId: Int,
-  productIndex: Int,
-  tragetProductIndex: Int,
-  sortIndex: Int,
-  combtIndex: Int,
-  pIndex: Int,
-  eIndex: Int,
-  targetFIndex: Int,
+  productId: Int,
+  tagId: Int,
+  uuid: String,
+  elementIds: [Int],
+  combinationId: Int,
 }
 # 品牌型录
 type BrandPic {

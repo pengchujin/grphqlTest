@@ -6,23 +6,15 @@ export class Collection {
   @Column({nullable: true})
   name: string;
   @Column({nullable: true})
-  itemId: number;
+  uuid: string;
   @Column({nullable: true})
-  categoryId: number;
+  productId: number;
   @Column({nullable: true})
-  productIndex: number;
+  tagId: number;
+  @Column('text', {array: true, nullable: true})
+  elementIds: number[];
   @Column({nullable: true})
-  tragetProductIndex: number;
-  @Column({nullable: true})
-  sortIndex: number;
-  @Column({nullable: true})
-  combtIndex: number;
-  @Column({nullable: true})
-  pIndex: number;
-  @Column({nullable: true})
-  eIndex: number;
-  @Column({nullable: true})
-  targetFIndex: number;
+  combinationId: number;
   @ManyToOne((type) => Vip, (vip) => vip.collections)
   vip: Vip;
 }
