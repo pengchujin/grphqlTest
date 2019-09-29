@@ -9,6 +9,7 @@ import { ChildType } from '../../entity/ChildType';
 import { Pic } from '../../entity/Pic';
 import { BrandPic } from '../../entity/BrandPic';
 import { Vip } from '../../entity/vip';
+const logger = require('../../logger');
 
 export async function getTypeList(_obj, { id }, { db }) {
   let res = [];

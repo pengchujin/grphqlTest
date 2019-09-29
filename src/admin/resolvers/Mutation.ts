@@ -10,6 +10,7 @@ import { ChildType } from '../../entity/ChildType';
 import { Pic } from '../../entity/Pic';
 import { BrandPic } from '../../entity/BrandPic';
 import { Vip } from '../../entity/vip';
+import { Collection } from '../../entity/Collection';
 
 async function authenticateAdmin(admin, password) {
   if (!admin) {
@@ -102,6 +103,15 @@ export async function modifyVipPassword(_obj, {vipId, newPassword}, { db, jwt })
     Number(config.SALT_ROUNDS)
   );
   await repository.save(vip);
+  return true;
+}
+
+export async function addCollection(_obj, {collection}, { db, jwt }) {
+  const vip = await ensureVip(db, jwt);
+  const collectionRepository = db.getRepository(Collection);
+  const newCollection = await collectionRepository.create(collection);
+  newCollection.vip = vip;
+  await collectionRepository.save(newCollection);
   return true;
 }
 

@@ -2,8 +2,10 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  Index
+  Index,
+  OneToMany
 } from 'typeorm';
+import { Collection } from './Collection';
 
 @Entity('vips')
 export class Vip {
@@ -16,4 +18,7 @@ export class Vip {
   username: string;
 
   @Column('text') encryptedPassword: string;
+
+  @OneToMany((type) => Collection, (collection) => collection.vip, {eager: true, nullable: true})
+  collections: Collection[];
 }

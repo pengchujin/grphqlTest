@@ -19,6 +19,23 @@ input picInput {
   languageType: Int,
 }
 
+# 添加收藏
+input collectionInput {
+  # ID
+  id: ID,
+  name: String,
+  # scene
+  itemId: Int,
+  categoryId: Int,
+  productIndex: Int,
+  tragetProductIndex: Int,
+  sortIndex: Int,
+  combtIndex: Int,
+  pIndex: Int,
+  eIndex: Int,
+  targetFIndex: Int,
+}
+
 input brandPicInput {
   # 添加图片时不用传ID, 修改图片需要传
   id: ID,
@@ -29,6 +46,21 @@ input brandPicInput {
   languageType: Int
 }
 
+type Collection {
+  # ID
+  id: ID,
+  name: String,
+  # scene
+  itemId: Int,
+  categoryId: Int,
+  productIndex: Int,
+  tragetProductIndex: Int,
+  sortIndex: Int,
+  combtIndex: Int,
+  pIndex: Int,
+  eIndex: Int,
+  targetFIndex: Int,
+}
 # 品牌型录
 type BrandPic {
   id: ID,
@@ -75,6 +107,8 @@ type Vip {
   username: String!
   # jwt
   jwt: String
+  # 收藏
+  collections: [Collection]
 }
 
 # 母菜单
@@ -204,4 +238,6 @@ type Mutation {
   modifyBrandPic(pics: [brandPicInput]): [BrandPic]
   # 删除品牌图片
   deleteBrandPic(id: ID!): Boolean!  
+  # 添加收藏
+  addCollection(collection: collectionInput!): Boolean!
 }
