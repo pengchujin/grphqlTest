@@ -221,7 +221,9 @@ type Mutation {
   # 修改品牌图片
   modifyBrandPic(pics: [brandPicInput]): [BrandPic]
   # 删除品牌图片
-  deleteBrandPic(id: ID!): Boolean!  
+  deleteBrandPic(id: ID!): Boolean! 
   # 添加收藏
   addCollection(collection: collectionInput!): Boolean!
+  # 查询收藏
+  getColletion(id: Int): [Collection]
 }

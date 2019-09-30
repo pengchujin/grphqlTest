@@ -116,3 +116,14 @@ export async function getAllUsers(_obj, {}, { db }) {
   const users = await vipRespository.find({order: {id: 'ASC'}});
   return users;
 }
+
+export async function getColletion(_obj, {id}, { db }) {
+  const vipRespository = db.getRepository(Vip);
+  const vip = await vipRespository.find(id);
+  if (!vip) {
+    throw validationError({
+      errorMsg: '用户不存在或ID错误!',
+    });
+  }
+  return vip.collections;
+}
