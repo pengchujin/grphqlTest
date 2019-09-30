@@ -185,6 +185,8 @@ type Query {
   getBrandPics: multiBrandPic!
   # 获取所有 Vip 用户
   getAllUsers: [Vip]!
+  # 查询收藏
+  getColletion(id: Int): [Collection]
 }
 
 type Mutation {
@@ -224,6 +226,4 @@ type Mutation {
   deleteBrandPic(id: ID!): Boolean! 
   # 添加收藏
   addCollection(collection: collectionInput!): Boolean!
-  # 查询收藏
-  getColletion(id: Int): [Collection]
 }
