@@ -196,6 +196,8 @@ type Mutation {
   vipSignin(username: String!, password: String!): Vip!
   # 添加 Vip 用户
   addVip(username: String!, password: String!): Boolean!
+  # 删除Vip用户
+  deleteVip(id: ID!): Boolean!
   # 修改 Vip 密码
   modifyVipPassword(vipId: ID!, newPassword: String!): Boolean!
   # 修改密码

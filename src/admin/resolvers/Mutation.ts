@@ -70,6 +70,21 @@ export async function addVip(_obj, { username, password }, { db, jwt }) {
   return true;
 }
 
+export async function deleteVip(_obj, { id }, { db, jwt }) {
+  const adminLogin = await ensureAdmin(db, jwt);
+  const repository = db.getRepository(Vip);
+  const collectionRepository = db.getRepository(Collection);
+  const vip = await repository.findOne(id);
+  if (!vip) {
+    throw validationError({
+      errorMsg: '没有当前用户',
+    });
+  }
+  await collectionRepository.remove(vip.collections);
+  await repository.remove(vip);
+  return true;
+}
+
 export async function modifyAdminPassword(_obj, {data}, { db, jwt }) {
   const admin = await ensureAdmin(db, jwt);
   const repository = db.getRepository(Admin);
